@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import UserLayout from "../components/UserLayout";
 import { ticketService } from "../services/ticketService";
 import { fileService } from "../services/fileService";
+import { mailService } from "../services/mailService";
+import { userService } from "../services/userService";
 import "../styles/new-ticket.css";
 
 export default function UserNewTicket() {
@@ -26,6 +28,19 @@ export default function UserNewTicket() {
       // Jeśli jest załącznik, prześlij go
       if (file && ticket.id) {
         await fileService.uploadFile(ticket.id, file);
+      }
+
+      // Pobierz dane użytkownika i wyślij email z potwierdzeniem
+      try {
+        const currentUser = await userService.getCurrentUser();
+        await mailService.sendMail({
+          to: currentUser.email,
+          subject: `Potwierdzenie utworzenia zgłoszenia #${ticket.id}`,
+          body: `Witaj ${currentUser.firstName},\n\nTwoje zgłoszenie "${title}" zostało pomyślnie utworzone i otrzymało numer #${ticket.id}.\n\nOpis zgłoszenia:\n${description}\n\nBędziemy informować Cię o postępach w rozwiązywaniu tego zgłoszenia.\n\nPozdrawiamy,\nZespół Helpdesk IT`,
+        });
+      } catch (mailError) {
+        // Nie przerywamy procesu jeśli wysłanie maila się nie powiodło
+        console.error("Nie udało się wysłać emaila z potwierdzeniem:", mailError);
       }
 
       // Przekieruj do listy zgłoszeń użytkownika

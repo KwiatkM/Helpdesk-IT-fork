@@ -74,3 +74,9 @@ export interface FileUploadResponse {
   contentType: string;
   size: number;
 }
+
+export interface SendMailRequest {
+  to: string;
+  subject: string;
+  body: string;
+}
