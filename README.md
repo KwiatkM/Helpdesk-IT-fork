@@ -4,7 +4,7 @@ System do zarządzania zgłoszeniami IT z podziałem na backend (Spring Boot) i 
 
 ## 🚀 Uruchomienie projektu
 
-### Backend
+### Backend 
 
 Swagger UI: http://localhost:8080/swagger-ui/index.html
 
